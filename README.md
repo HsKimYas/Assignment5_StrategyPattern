@@ -35,7 +35,6 @@ docs/
 └── strategy-uml.puml
 
 README.md
-REPORT.md
 pom.xml
 ```
 
