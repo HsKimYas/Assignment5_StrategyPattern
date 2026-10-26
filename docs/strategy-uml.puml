@@ -1,0 +1,50 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Navigator <<Context>> {
+    - strategy: RouteStrategy
+    + Navigator(strategy: RouteStrategy)
+    + setStrategy(strategy: RouteStrategy): void
+    + plan(request: RouteRequest): Route
+    + getCurrentStrategyName(): String
+}
+
+interface RouteStrategy <<Strategy>> {
+    + planRoute(request: RouteRequest): Route
+    + name(): String
+}
+
+class CarStrategy <<ConcreteStrategy>>
+class WalkStrategy <<ConcreteStrategy>>
+class CycleStrategy <<ConcreteStrategy>>
+
+class RouteRequest <<Value Object>> {
+    + origin: String
+    + destination: String
+    + distanceKm: double
+}
+
+class Route <<Result>> {
+    + origin: String
+    + destination: String
+    + distanceKm: double
+    + estimatedMinutes: int
+    + transportMode: String
+    + description: String
+}
+
+class Main <<Client>> {
+    + main(args: String[]): void
+}
+
+Navigator o--> RouteStrategy : stores and delegates to
+RouteStrategy <|.. CarStrategy : implements
+RouteStrategy <|.. WalkStrategy : implements
+RouteStrategy <|.. CycleStrategy : implements
+RouteStrategy ..> RouteRequest : reads route input
+RouteStrategy ..> Route : creates route result
+Navigator ..> RouteRequest : accepts as input
+Navigator ..> Route : returns to caller
+Main ..> Navigator : creates, configures, and calls
+
+@enduml
